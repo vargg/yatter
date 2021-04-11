@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %} Записи сообщества {{ group.title }} | Yatter {% endblock title %}
+
+{% block content %}
+  {% for post in page %}
+    {% include 'posts/post_item.html' with hide_group=True%}
+  {% empty %}
+    <h5>Ooops...</h5>
+    <p>Nothing yet.</p>
+  {% endfor %}
+
+  {% include 'posts/paginator.html' %}
+{% endblock content %}
+
+{% block sidebar_top_header %} {{ group.title }} {% endblock sidebar_top_header %}
+{% block sidebar_top_preface %} {{ group.description }} {% endblock sidebar_top_preface %}

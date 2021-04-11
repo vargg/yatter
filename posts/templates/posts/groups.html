@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %} Сообщества | {{ block.super }} {% endblock title %}
+
+{% block header %}{% endblock header %}
+
+{% block content %}
+  {% for group in all_groups %}
+    <a href="{{ group.get_absolute_url }}" class="btn btn-outline-primary btn-sm" role="button">
+      {{ group.title }}
+    </a>
+  {% endfor %}
+{% endblock content %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %} Последние обновления на сайте | {{ block.super }} {% endblock title %}
+
+{% block content %}
+  {% include "posts/menu.html" with index=True %}
+
+  {% load cache %}
+  {% cache 20 index_page %}
+
+    {% for post in page %}
+      {% include "posts/post_item.html" %}
+    {% empty %}
+      <h5>Ooops...</h5>
+      <p>Nothing yet.</p>
+    {% endfor %}
+
+  {% endcache %}
+
+  {% include "posts/paginator.html" %}
+{% endblock content %}
+    
+{% block sidebar_top_header %} Последние обновления на сайте {% endblock sidebar_top_header %}
+{% block sidebar_top_preface %} {% endblock sidebar_top_preface %}

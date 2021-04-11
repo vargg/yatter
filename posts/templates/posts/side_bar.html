@@ -1,0 +1,64 @@
+<div class="card">
+  {% load thumbnail %}
+    {% thumbnail post_author.profile.avatar "300x300" upscale=True as im %}
+      <img class="card-img" src="{{ im.url }}">
+  {% endthumbnail %}
+  <div class="card-body">
+    <div class="h2 text-primary">
+      {{ post_author.get_full_name }}
+    </div>
+    <div class="h3 text-muted">
+      @{{ post_author.get_username }}
+    </div>
+    
+    {% if post_author.profile.birth_date != None  %}
+    <div class="text-muted">
+      <h6>{{ post_author.profile.birth_date }}</h6>
+    </div>
+    {% endif %}
+      
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      
+      {% if post_author.profile.status != None and post_author.profile.status|length > 0 %}
+      <div class="h6 text-muted">
+        <h7>Статус:</h7><h5>{{ post_author.profile.status }}</h5>
+      </div>
+      {% endif %}
+
+      {% if post_author.profile.about != None and post_author.profile.about|length > 0 %}
+      <div class="h6 text-muted">
+        <h7>Я:</h7><h5>{{ post_author.profile.about }}</h5>
+      </div>
+      {% endif %}
+
+    </li>
+    <li class="list-group-item">
+      <div class="h6 text-muted">
+        Подписчиков: {{ subscribers }} <br />
+        Подписан: {{ subscriptions }}
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="h6 text-muted">
+        Постов: {{ posts_qty }}
+      </div>
+    </li>
+    {% if not post_author == user %}
+    {% if following %}
+    <a class="btn btn-lg btn-light" href="{% url 'posts:profile_unfollow' post_author.username %}" role="button">
+      Отписаться
+    </a>
+    {% else %}
+    <a class="btn btn-lg btn-primary" href="{% url 'posts:profile_follow' post_author.username %}" role="button">
+      Подписаться
+    </a>
+    {% endif %}
+    {% else %}
+    <a class="btn btn-lg btn-primary" href="{% url 'users:edit_profile' post_author.username %}" role="button">
+      Редактировать
+    </a>
+      {% endif %}
+  </ul>
+</div>

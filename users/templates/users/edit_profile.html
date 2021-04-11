@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %} Новая запись | {{ block.super }} {% endblock title %}
+{% block header %} {% if post %} Редактировать {% else %} Новая запись {% endif %} {% endblock header %}
+{% block content %}
+{% load user_filters %}
+    <div class="card">
+      <div class="card-body">
+        Обо мне
+        {% for error in form.errors %}
+        <div class="alert alert-danger" role="alert">
+          {{ error }}
+        </div>
+        {% endfor %}
+
+        <form method="post" action="{% url 'users:edit_profile' username=user.username %}" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          {% for field in form %}
+          <div class="form-group row" aria-required={% if field.field.required %}"true"{% else %}"false"{% endif %}>
+            <label for="{{ field.id_for_label }}" class="col-md-4 col-form-label text-md-right">{{ field.label }}{% if field.field.required %}<span class="required">*</span>{% endif %}</label>
+            <div class="col-md-6">
+              {{ field|addclass:"form-control" }}
+              {% if field.help_text %}
+              <small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ field.help_text|safe }}</small>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+
+          <div class="col-md-6 offset-md-4">
+            <button type="submit" class="btn btn-primary">
+              Сохранить
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+{% endblock content %}
+
+{% block sidebar_top_header %}
+  Обо мне
+{% endblock sidebar_top_header %}
+
+{% block sidebar_top_preface %}
+  Описание страницы
+{% endblock sidebar_top_preface %}

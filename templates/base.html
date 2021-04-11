@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+  <title>{% block title %} Yatter {% endblock title %}</title>
+  {% load static %}
+  <link rel='stylesheet' href='{% static 'bootstrap/dist/css/bootstrap.min.css' %}'>
+  <script src='{% static 'jquery/dist/jquery.min.js' %}'></script>
+  <script src='{% static 'bootstrap/dist/js/bootstrap.min.js' %}'></script>
+</head>
+
+<body class='d-flex flex-column min-vh-100'>
+  {% include 'nav.html' %}
+
+  {% if messages %}  
+    {% for message in messages  %}
+      {% if message.tags == 'error' %}              
+        <div class="alert alert-danger" role-"alert">
+          {{ message }}
+        </div>
+      {% else %}
+        <div class="alert alert-{{ message.tags }}" role-"alert">
+          {{ message }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  <main>
+    <div class='container'>
+      <div class="row">
+        <div class="col-md-9 mt-1 mx-auto">
+
+          {% block content %}
+            <!-- Содержимое страницы -->
+          {% endblock content %}
+
+        </div>
+
+        {% block sidebar %}
+
+        <div class="col-md-3 mb-3 mt-1">
+          {% block sidebar_list %}
+          {% block sidebar_top %}
+          <div class="card">
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <div class="h3">
+                    <span class="text-primary">
+                      {% block sidebar_top_header %}
+                      Заголовок страницы
+                      {% endblock sidebar_top_header %}
+                    </span>
+                  </div> 
+                </li>
+                <li class="list-group-item">
+                  <div class="h6 text-muted">
+                    {% block sidebar_top_preface %}
+                    Описание страницы
+                    {% endblock sidebar_top_preface %}
+                  </div>
+                </li>
+              </ul>  
+            </div>  
+          </div>
+          {% endblock sidebar_top %}
+          {% block sidebar_group %}
+          <div class="card mt-2">
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <div class="h3">
+                    <span class="text-primary">
+                      {% block sidebar_group_header %}
+                        <a href="{% url 'posts:groups' %}">
+                          Сообщества
+                        </a>
+                      {% endblock sidebar_group_header %}
+                    </span>
+                  </div> 
+                </li>
+                <li class="list-group-item">
+                    {% block sidebar_group_all %}
+                      
+                      {% for group in all_groups %}
+                        <a href="{{ group.get_absolute_url }}" class="btn btn-outline-primary btn-sm" role="button">
+                          {{ group.title }}
+                        </a>
+                      {% endfor %}
+                        
+                    {% endblock sidebar_group_all %}
+                </li>
+              </ul>                                            
+            </div>   
+          </div>   
+          {% endblock sidebar_group %}
+          {% block sidebar_tag %}
+          <div class="card mt-2">
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <div class="h3">
+                    <span class="text-primary">
+                      {% block sidebar_tag_header %}
+                        <a href="{% url 'posts:tags' %}">
+                          Тэги
+                        </a>
+                      {% endblock sidebar_tag_header %}
+                    </span>
+                  </div> 
+                </li>
+                <li class="list-group-item">
+                  <div class="h6 text-muted">
+                    {% block sidebar_tag_all %}
+
+                      {% for tag in all_tags %}
+                        <a href="{{ tag.get_absolute_url }}" class="btn btn-outline-primary btn-sm" role="button">
+                          #{{ tag.title }}
+                        </a>
+                      {% endfor %}
+
+                    {% endblock sidebar_tag_all %}
+                  </div>
+                </li>
+              </ul>                                            
+            </div>   
+          </div>   
+          {% endblock sidebar_tag %}
+          {% endblock sidebar_list %}                                             
+        </div>
+        {% endblock sidebar %}
+      </div>
+  </main>
+  {% include 'footer.html' %}
+</body>
+
+</html>

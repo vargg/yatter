@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %} Избранное | {{ block.super }} {% endblock title %}
+
+{% block content %}
+  {% include "posts/menu.html" with index=True %}
+
+  {% for post in page %}
+    {% include "posts/post_item.html" %}
+  {% empty %}
+    <h5>Ooops...</h5>
+    <p>Nothing yet.</p>
+  {% endfor %}
+
+  {% include "posts/paginator.html" %}
+{% endblock content %}
+
+{% block sidebar_top_header %} Избранные записи {% endblock sidebar_top_header %}
+{% block sidebar_top_preface %} {% endblock sidebar_top_preface %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+  {% if post_author.get_full_name|length > 0 %}
+    {{ post_author.get_full_name }}
+  {% else %}
+    {{ post_author.get_username }}
+  {% endif %}
+
+  | {{ block.super }}
+{% endblock title %}
+
+{% block header %}{% endblock header %}
+
+{% block content %}
+
+  {% include 'posts/post_item.html' %}
+  {% include "posts/comment_form.html" %}
+  {% include "posts/comments.html" %}
+
+{% endblock content %}

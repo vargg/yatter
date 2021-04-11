@@ -1,0 +1,15 @@
+{% for item in comments %}
+  <div class="card mb-3 mt-1 shadow-sm">
+    <div class="card-body">
+      <a href="{% url 'posts:profile' item.author.username %}" name="comment_{{ item.id }}">
+        @{{ item.author.username }}
+      </a>
+      <p class="card-text">
+        {{ item.text|safe|linebreaks }}
+      </p>
+      <div class=" text-right">
+        <small class="text-muted">{{ item.created|date:'d.m.Y' }}</small>
+      </div>
+    </div>
+  </div>
+{% endfor %}

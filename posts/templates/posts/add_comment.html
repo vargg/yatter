@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %} Новый комментарий | {{ block.super }} {% endblock title %}
+{% block header %} {% endblock header %}
+
+{% block content %}
+  {% load user_filters %}
+    {% if user.is_authenticated %}
+      <div class="card mb-3 mt-1 shadow-sm">
+        <form method="post">
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="form-group">
+              {{ form.text|addclass:"form-control" }}
+            </div>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+          </div>
+        </form>
+      </div>
+    {% endif %}
+{% endblock content %}
+
+{% block sidebar_top_header %}
+  Добавить комментарий
+{% endblock sidebar_top_header %}
+
+{% block sidebar_top_preface %}{% endblock sidebar_top_preface %}
