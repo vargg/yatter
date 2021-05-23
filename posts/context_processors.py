@@ -1,4 +1,5 @@
 import datetime as dt
+
 from django.db.models import Count
 
 from .models import Group, Tag

@@ -6,11 +6,10 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import Client, TestCase
-from django.test import override_settings
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
-
 from yatter.settings import BASE_DIR
+
 from ..models import Follow, Group, Post
 
 User = get_user_model()
@@ -246,7 +245,7 @@ class PostPagesTests(TestCase):
         url = self.urls[name]
         Follow.objects.create(
             user=PostPagesTests.follower,
-            author=PostPagesTests.user,
+            following=PostPagesTests.user,
         )
         unsubscriptions_start = Follow.objects.filter(
             user=PostPagesTests.follower,
@@ -274,7 +273,7 @@ class PostPagesTests(TestCase):
         one_more_client.force_login(one_more_user)
         Follow.objects.create(
             user=PostPagesTests.follower,
-            author=PostPagesTests.user,
+            following=PostPagesTests.user,
         )
         name = 'follow_index'
         url = self.urls[name]

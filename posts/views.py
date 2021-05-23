@@ -1,8 +1,8 @@
-from django.db.models import QuerySet
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CommentForm, PostForm
@@ -120,7 +120,7 @@ def profile(request, username):
         User.objects.select_related('profile'),
         username=username,
     )
-    subscribers = Follow.objects.filter(author__username=username).count()
+    subscribers = Follow.objects.filter(following__username=username).count()
     subscriptions = Follow.objects.filter(user__username=username).count()
     if request.user.is_authenticated and request.user != post_author:
         following = Follow.objects.filter(
@@ -274,7 +274,7 @@ def profile_follow(request, username):
     if not request.user == author:
         Follow.objects.get_or_create(
             user=request.user,
-            author=author,
+            following=author,
         )
     return redirect(
         'posts:profile',
@@ -288,10 +288,10 @@ def profile_unfollow(request, username):
         User,
         username=username,
     )
-    if Follow.objects.filter(user=request.user, author=author).exists():
+    if Follow.objects.filter(user=request.user, following=author).exists():
         subscription = Follow.objects.get(
             user=request.user,
-            author=author,
+            following=author,
         )
         subscription.delete()
     return redirect(

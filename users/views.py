@@ -1,6 +1,6 @@
-from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import CreateView
 
 from .forms import CreationForm, EditProfileForm
@@ -22,7 +22,7 @@ class SignUp(CreateView):
             username=username,
             password=password,
         )
-        login(self.request, user)  # instant authentication
+        login(self.request, user)
         return redirect('posts:index')
 
 

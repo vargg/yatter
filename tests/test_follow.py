@@ -3,7 +3,7 @@ import tempfile
 
 import pytest
 from django.contrib.auth import get_user_model
-from django.core.paginator import Page, Paginator
+from django.core.paginator import Page
 from django.db.models import fields
 
 try:
@@ -48,22 +48,18 @@ class TestFollow:
         assert user_field.remote_field.related_name == 'follower', (
             'Свойство `user` модели `Follow` должно иметь аттрибут `related_name="follower"`'
         )
-        # assert user_field.on_delete == CASCADE, (
-        #     'Свойство `user` модели `Follow` должно иметь аттрибут `on_delete=models.CASCADE`'
 
-        author_field = search_field(model_fields, 'author_id')
-        assert author_field is not None, 'Добавьте пользователя, автор который создал событие `author` модели `Follow`'
+        author_field = search_field(model_fields, 'following_id')
+        assert author_field is not None, 'Добавьте пользователя, автор который создал событие `following` модели `Follow`'
         assert type(author_field) == fields.related.ForeignKey, (
-            'Свойство `author` модели `Follow` должно быть ссылкой на другую модель `ForeignKey`'
+            'Свойство `following` модели `Follow` должно быть ссылкой на другую модель `ForeignKey`'
         )
         assert author_field.related_model == get_user_model(), (
-            'Свойство `author` модели `Follow` должно быть ссылкой на модель пользователя `User`'
+            'Свойство `following` модели `Follow` должно быть ссылкой на модель пользователя `User`'
         )
         assert author_field.remote_field.related_name == 'following', (
-            'Свойство `author` модели `Follow` должно иметь аттрибут `related_name="following"`'
+            'Свойство `following` модели `Follow` должно иметь аттрибут `related_name="following"`'
         )
-        # assert author_field.on_delete == CASCADE, (
-        #     'Свойство `author` модели `Follow` должно иметь аттрибут `on_delete=models.CASCADE`'
 
     def check_url(self, client, url, str_url):
         try:
@@ -120,12 +116,7 @@ class TestFollow:
         Post.objects.create(text='Тестовый пост 4574', author=user_2, image=image)
 
         response = self.check_url(user_client, '/follow', '/follow/')
-        assert 'paginator' in response.context, (
-            'Проверьте, что передали переменную `paginator` в контекст страницы `/follow/`'
-        )
-        assert type(response.context['paginator']) == Paginator, (
-            'Проверьте, что переменная `paginator` на странице `/follow/` типа `Paginator`'
-        )
+
         assert 'page' in response.context, (
             'Проверьте, что передали переменную `page` в контекст страницы `/follow/`'
         )

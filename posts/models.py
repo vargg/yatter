@@ -25,6 +25,7 @@ class Group(models.Model):
     description = models.TextField(
         verbose_name='Описание',
         help_text='Здесь кратко опишите своё сообщество',
+        blank=True,
     )
 
     def __str__(self):
@@ -124,7 +125,7 @@ class Follow(models.Model):
         related_name='follower',
         verbose_name='Подписчик',
     )
-    author = models.ForeignKey(
+    following = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='following',
@@ -136,14 +137,14 @@ class Follow(models.Model):
             models.UniqueConstraint(
                 fields=[
                     'user',
-                    'author',
+                    'following',
                 ],
                 name='unique_subscription',
             ),
         ]
 
     def __str__(self):
-        return f'{self.user.username} subscribed to {self.author.username}'
+        return f'{self.user.username} subscribed to {self.following.username}'
 
 
 class Tag(models.Model):
@@ -153,18 +154,19 @@ class Tag(models.Model):
         unique=True,
         verbose_name='Тэг',
     )
-    post = models.ManyToManyField(
+    post = models.ForeignKey(
         Post,
         related_name='tags',
         verbose_name='Пост',
+        on_delete=models.CASCADE,
     )
 
     class Meta():
         constraints = [
             models.UniqueConstraint(
                 fields=[
-                    'title',
                     'post',
+                    'title',
                 ],
                 name='unique_marking',
             ),
