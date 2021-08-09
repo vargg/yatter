@@ -125,7 +125,7 @@ def profile(request, username):
     if request.user.is_authenticated and request.user != post_author:
         following = Follow.objects.filter(
             user=request.user,
-            author=post_author
+            following=post_author
         ).exists
     else:
         following = False
