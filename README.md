@@ -14,6 +14,14 @@
 ```
 pip install requirements.txt
 ```
+Создать миграции:
+```
+py manage.py makemigrations
+```
+Применить миграции:
+```
+py manage.py migrate
+```
 Запустить Django development server (сайт будет доступен по адресу localhost:8000):
 ```
 python manage.py runserver
