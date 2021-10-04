@@ -2,7 +2,7 @@ import datetime as dt
 
 from django.db.models import Count
 
-from .models import Group, Tag
+from .models import Group
 
 
 def year(request):
@@ -21,16 +21,4 @@ def all_groups(request):
     )[:10]
     return {
         'all_groups': all_groups,
-    }
-
-
-def all_tags(request):
-    '''Display a list of all groups by the number of marked posts.'''
-    all_tags = Tag.objects.annotate(
-        num_posts=Count('post')
-    ).order_by(
-        '-num_posts',
-    )[:10]
-    return {
-        'all_tags': all_tags,
     }

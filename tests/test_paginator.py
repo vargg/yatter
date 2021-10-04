@@ -50,7 +50,7 @@ class TestGroupPaginatorView:
         )
 
     def test_profile_paginator_view(self, client, few_posts_with_group):
-        response = client.get(f'/{few_posts_with_group.author.username}/')
+        response = client.get(f'/users/{few_posts_with_group.author.username}/')
         assert 'paginator' not in response.context, (
             'Проверьте, что объект `page` страницы `/` не содержит `paginator` в контексте'
         )

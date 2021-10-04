@@ -68,50 +68,50 @@ class TestComment:
     @pytest.mark.django_db(transaction=True)
     def test_comment_add_view(self, client, post):
         try:
-            response = client.get(f'/{post.author.username}/{post.id}/comment')
+            response = client.get(f'/users/{post.author.username}/{post.id}/comment')
         except Exception as e:
-            assert False, f'''Страница `/<username>/<post_id>/comment/` работает неправильно. Ошибка: `{e}`'''
-        if response.status_code in (301, 302) and response.url == f'/{post.author.username}/{post.id}/comment/':
-            url = f'/{post.author.username}/{post.id}/comment/'
+            assert False, f'''Страница `/users/<username>/<post_id>/comment/` работает неправильно. Ошибка: `{e}`'''
+        if response.status_code in (301, 302) and response.url == f'/users/{post.author.username}/{post.id}/comment/':
+            url = f'/users/{post.author.username}/{post.id}/comment/'
         else:
-            url = f'/{post.author.username}/{post.id}/comment'
+            url = f'/users/{post.author.username}/{post.id}/comment'
         assert response.status_code != 404, (
-            'Страница `/<username>/<post_id>/comment/` не найдена, проверьте этот адрес в *urls.py*'
+            'Страница `/users/<username>/<post_id>/comment/` не найдена, проверьте этот адрес в *urls.py*'
         )
 
         response = client.post(url, data={'text': 'Новый коммент!'})
         if not(response.status_code in (301, 302) and response.url.startswith('/auth/login')):
             assert False, (
                 'Проверьте, что не авторизованного пользователя '
-                '`/<username>/<post_id>/comment/` отправляете на страницу авторизации'
+                '`/users/<username>/<post_id>/comment/` отправляете на страницу авторизации'
             )
 
     @pytest.mark.django_db(transaction=True)
     def test_comment_add_auth_view(self, user_client, post):
         try:
-            response = user_client.get(f'/{post.author.username}/{post.id}/comment')
+            response = user_client.get(f'/users/{post.author.username}/{post.id}/comment')
         except Exception as e:
-            assert False, f'''Страница `/<username>/<post_id>/comment/` работает неправильно. Ошибка: `{e}`'''
-        if response.status_code in (301, 302) and response.url == f'/{post.author.username}/{post.id}/comment/':
-            url = f'/{post.author.username}/{post.id}/comment/'
+            assert False, f'''Страница `/users/<username>/<post_id>/comment/` работает неправильно. Ошибка: `{e}`'''
+        if response.status_code in (301, 302) and response.url == f'/users/{post.author.username}/{post.id}/comment/':
+            url = f'/users/{post.author.username}/{post.id}/comment/'
         else:
-            url = f'/{post.author.username}/{post.id}/comment'
+            url = f'/users/{post.author.username}/{post.id}/comment'
         assert response.status_code != 404, (
-            'Страница `/<username>/<post_id>/comment/` не найдена, проверьте этот адрес в *urls.py*'
+            'Страница `/users/<username>/<post_id>/comment/` не найдена, проверьте этот адрес в *urls.py*'
         )
 
         text = 'Новый коммент 94938!'
         response = user_client.post(url, data={'text': text})
 
         assert response.status_code in (301, 302), (
-            'Проверьте, что со страницы `/<username>/<post_id>/comment/` '
+            'Проверьте, что со страницы `/users/<username>/<post_id>/comment/` '
             'после создания комментария перенаправляете на страницу поста'
         )
         comment = Comment.objects.filter(text=text, post=post, author=post.author).first()
         assert comment is not None, (
-            'Проверьте, что вы создаёте новый комментарий `/<username>/<post_id>/comment/`'
+            'Проверьте, что вы создаёте новый комментарий `/users/<username>/<post_id>/comment/`'
         )
-        assert response.url.startswith(f'/{post.author.username}/{post.id}'), (
+        assert response.url.startswith(f'/users/{post.author.username}/{post.id}'), (
             'Проверьте, что перенаправляете на страницу поста '
-            '`/<username>/<post_id>/` после добавления нового комментария'
+            '`/users/<username>/<post_id>/` после добавления нового комментария'
         )

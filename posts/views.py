@@ -6,7 +6,7 @@ from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CommentForm, PostForm
-from .models import Comment, Follow, Group, Post, Tag
+from .models import Comment, Follow, Group, Post
 
 User = get_user_model()
 
@@ -49,26 +49,6 @@ def group_posts(request, slug):
     )
 
 
-def tagged_posts(request, tag):
-    '''Pagination of all posts with the tag.'''
-    all_posts = Post.objects.filter(
-        tags__title=tag,
-    ).select_related(
-        'author',
-        'group',
-        'author__profile',
-    )
-    page = pagination(request, all_posts)
-    return render(
-        request,
-        'posts/tag.html',
-        {
-            'page': page,
-            'tag': tag,
-        }
-    )
-
-
 @login_required
 def new_post(request):
     '''Add a new post.'''
@@ -81,17 +61,10 @@ def new_post(request):
             new_post = form.save(commit=False)
             new_post.author = request.user
             new_post.save()
-            tags_added = tagging(new_post)
-            if tags_added:
-                messages.success(
-                    request,
-                    'Пост добавлен, тэги отмечены.'
-                )
-            else:
-                messages.success(
-                    request,
-                    'Пост добавлен.'
-                )
+            messages.success(
+                request,
+                'Пост добавлен.'
+            )
             return redirect('posts:index')
         return render(
             request,
@@ -186,13 +159,6 @@ def post_edit(request, username, post_id):
         )
         if form.is_valid():
             form.save()
-            tags_added = tagging(form.save(commit=False))
-            if tags_added:
-                messages.success(
-                    request,
-                    'Тэги отмечены'
-                )
-            form.save(commit=False)
             return redirect(
                 'posts:post',
                 username=username,
@@ -311,17 +277,6 @@ def groups(request):
     )
 
 
-def tags(request):
-    all_tags = Tag.objects.all().order_by('title')
-    return render(
-        request,
-        'posts/tags.html',
-        {
-            'all_tags': all_tags,
-        }
-    )
-
-
 def page_not_found(request, exception):
     return render(
         request,
@@ -344,20 +299,3 @@ def pagination(request, posts: QuerySet):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return page
-
-
-def tagging(post: Post):
-    import re
-    all_tags = re.findall(
-        r'#\w+',
-        post.text,
-    )
-    if len(all_tags) > 0:
-        for a_tag in all_tags:
-            a_tag = a_tag[1:]
-            tag_instance = Tag.objects.get_or_create(
-                title=a_tag,
-            )
-            tag_instance[0].post.add(post)
-        return True
-    return False
