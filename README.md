@@ -1,5 +1,7 @@
 # Yatter.
 
+http://62.84.118.140/
+
 ## Стэк
 [Python](https://www.python.org/) v.3.8.5, [Django](https://www.djangoproject.com/) v.2.2.6, [Django REST framework](https://www.django-rest-framework.org/) v.3.12.4, [DRF simple JWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/) v.4.6.0, [PostgreSQL](https://www.postgresql.org) v.12.4, [Nginx](https://nginx.org/en/docs/) v.1.19.3, [Docker](https://www.docker.com/) v.20.10.8.
 
